@@ -3,37 +3,50 @@ const authenticate = require('../config/authentication');
 
 async function getBill(req,res){
     let start = Date.now();
-    console.log(`Request recieved at ${Date(start)}`)
+    console.log(`\nRequest recieved at ${Date(start)}`)
     let [morningValues,eveningValues,inputSize] = await getValues(req.body.spreadsheetUrl);
+
+    console.log("\nData acquisition done!")
 
     sortValues(morningValues);
     sortValues(eveningValues);
 
+    // TODO: This can be done much simply if array destructuring happens properly
+    // Find what is happening in array destructuring and try to simplify the code
     let morningRates,eveningRates,morningProducerCount,eveningProducerCount;
     if(req.body.withMeasurement === false){
-        morningRates = 
-        ratesWithoutMeasurement(morningValues,req.body.rates.morning,req.body.BMNumbers)
-        eveningRates
-            = ratesWithoutMeasurement(eveningValues,req.body.rates.evening,req.body.BMNumbers)
+        let {result,producerCount} = 
+            ratesWithoutMeasurement(morningValues,req.body.rates.morning,req.body.BMNumbers);
+        morningProducerCount = producerCount, morningRates = result;
     }else{
-        morningRates = ratesWithMeasurement(morningValues,req.rateScheme);
-        eveningRates = ratesWithMeasurement(eveningValues,req.rateScheme);
+        let {result,producerCount} = ratesWithMeasurement(morningValues,req.rateScheme);
+        morningProducerCount = producerCount, morningRates = result;
     }
 
-    console.log(`Rates successfully calculated\nProducer Count:${morningProducerCount}`);
-    let stop = Date.now();
-    console.log(`Request sent.Input Size: ${inputSize}\nTook ${stop-start}ms to process the request`)
-    res.send('Double OK')
+    if(req.body.withMeasurement === false){
+        let {result,producerCount} = 
+            ratesWithoutMeasurement(eveningValues,req.body.rates.evening,req.body.BMNumbers);
+        eveningProducerCount = producerCount, eveningRates = result;
+    }else{
+        let {result,producerCount} = ratesWithMeasurement(eveningValues,req.rateScheme);
+        eveningProducerCount = producerCount, eveningRates = result;
+    }
 
-    eveningValues.forEach((entry,index)=>{
-        console.log(entry,eveningRates[index]);
-    })
+
+    console.log(`\nRates successfully calculated\nMorning Producer Count:${morningProducerCount}\nEvening Producer Count:${eveningProducerCount}`);
 
     // TODO: Find possible errors
 
     // TODO: Calculate the totals for each producer
+    let morningTotals = producerTotal(morningValues,morningRates,morningProducerCount);
+    let eveningTotals = producerTotal(eveningValues,eveningRates,eveningProducerCount);
+    console.log(`Producer-wise totals calculated`)
 
     // TODO: Print to pdf and send response
+
+    let stop = Date.now();
+    console.log(`\nRequest sent.Input Size: ${inputSize}\nTook ${stop-start}ms to process the request`)
+    res.send('Double OK')
     
 }
 
@@ -69,7 +82,6 @@ The result has the dates filled.
             })
         })
 
-        console.log("Data acquisition done!")
         return [data.valueRanges[0].values,data.valueRanges[1].values,inputSize];
 
 }
@@ -101,6 +113,7 @@ The values input should be ordered datewise
 function ratesWithoutMeasurement(values,rates,BMNumbers)
 /*
 Calculates the rates to the given input and returns the rates array
+and producer count
 Numbers in BMNumbers array are given a separate rate
 */ 
 
@@ -130,16 +143,36 @@ Numbers in BMNumbers array are given a separate rate
             else return entry[2]*CMRate/10;
         });
         
-        console.log(`Producer Count: ${producerCount}`);
-        return result;
+        return {result,producerCount};
 }
 
 function ratesWithMeasurement(values,rateScheme){
 
 }
 
-function producerTotal(values,rates){
+function producerTotal(values,rates,producerCount){
+    let totals = Array.from(Array(producerCount), ()=> new Array(5));
 
+    let prev = values[0][1],totalLtrs = 0,totalDays = 0,totalAmount =0;
+    let totalsEntered = 0;
+    for(let i=0;i<values.length;i++){
+        if(values[i][1] != prev){
+            totals[totalsEntered] = 
+                [prev,totalLtrs/10,totalDays,Math.round(totalAmount*100)/100,Math.round(totalAmount*1000/totalLtrs)/100];
+            prev = values[i][1];
+            totalAmount = 0, totalDays = 0, totalLtrs = 0;
+            totalsEntered++;
+        }
+
+        totalLtrs += values[i][2];
+        totalAmount += rates[i];
+        totalDays++;
+    }
+
+    totals[totalsEntered] = 
+                [prev,totalLtrs,totalDays,Math.round(totalAmount*100)/100,Math.round(totalAmount*1000/totalLtrs)/100];
+
+    return totals;
 }
 
 module.exports = getBill;
