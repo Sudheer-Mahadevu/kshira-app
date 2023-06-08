@@ -17,8 +17,9 @@ async function main(){
 
     // Create a client instance for the API you want to use
     const client = await auth.getClient();
-    console.log('Service account authentication successful');
-    return client
+    const service = google.sheets({version: 'v4',auth: client});
+    console.log('Authentication successful, connected to sheetsAPI');
+    return service
 }
 
 module.exports = main;
