@@ -1,7 +1,33 @@
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
-import { Checkbox, FormControl, FormControlLabel, TextField, Typography } from '@mui/material';
+import { Checkbox,Radio ,Stack,Paper, FormControlLabel, TextField, Typography, RadioGroup, FormHelperText, Button } from '@mui/material';
 import { CopyToClipboard } from "react-copy-to-clipboard";
+
+function Form1(){
+    return(
+        <>
+            <Stack alignItems={"center"} spacing={3}>
+                    <Paper  sx={{width:400}}>
+                    <Stack alignItems={"center"} spacing={2} sx={{margin:2}}>
+                    <FormControlLabel required control={<Checkbox/>} label="Shared the spreadsheet"/>
+                    <TextField required label="Sheet Link"/>
+                    </Stack>
+                    </Paper>
+                    <Paper  sx={{width:400}}>
+                    <Stack alignItems={"center"}>
+                    <Typography variant='h5'>Measurement</Typography>
+                    <RadioGroup defaultValue="true">
+                        <FormHelperText>Select with measurement if SNF and Fat are entered</FormHelperText>
+                        <FormControlLabel value="true" label="with measurement" control={<Radio/>}/>
+                        <FormControlLabel value="false" label="without measurement" control={<Radio/>}/>
+                    </RadioGroup>
+                    </Stack>
+                    </Paper>
+                    <Button>Next</Button>
+                </Stack>
+        </>
+    )
+}
 
 function LandingPage(){
     return(
@@ -41,15 +67,13 @@ function LandingPage(){
                 </CopyToClipboard>
             </Grid>
             <Grid xs={12} >
+            {/* Put a stepper here instead */}
                 <Typography variant='h4' textAlign={"center"}>
                     Step 1 of 2
                 </Typography>
             </Grid>
-            <Grid xs={12} justifyContent={"center"}>
-                <FormControl>
-                    <FormControlLabel required control={<Checkbox/>} label="Shared the spreadsheet"/>
-                    <FormControlLabel required control={<TextField/>} label = "Sheet Link"/>
-                </FormControl>
+            <Grid xs={12}>
+                <Form1/>
             </Grid>
         </Grid>
     )
