@@ -66,7 +66,7 @@ function Form2(props){
     return(
         <>
             <Stack spacing={3} alignItems={"center"}>
-                    <Typography variant='h4' textAlign={"center"}>
+                    <Typography variant='h4' color={"#3366ff"} textAlign={"center"}>
                     Step 2 of 2
                     </Typography>
                     <Paper sx={{width:400}}>

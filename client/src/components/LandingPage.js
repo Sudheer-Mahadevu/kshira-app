@@ -77,21 +77,21 @@ function LandingPage(){
                 <Box
                 component="img"
                 alt = "logo"
-                src = {require("../images/logo150.png")}
+                src = {require("../images/logo100.png")}
                 />
             </Grid>
             <Grid mdOffset={1.5} md={5} xs={10}> 
-                <Typography textAlign={"center"} variant={"h1"}>
+                <Typography color={"#00ccff"} textAlign={"center"} variant={"h1"}>
                     Kshira
                 </Typography>
             </Grid>
             <Grid xs={12}>
-                <Typography textAlign={"center"} variant = "h3">
+                <Typography color={"#ff80aa"} textAlign={"center"} variant = "h3">
                     Calcuate bills instantly from your mobile...
                 </Typography>
             </Grid>
             <Grid xs={12}>
-                <Typography textAlign={"center"} variant = "h4">
+                <Typography color={"#ff1a1a"} textAlign={"center"} variant = "h4">
                     Before you submit the spreadsheet link,share it to the following email id:
                 </Typography>
             </Grid>
@@ -104,7 +104,7 @@ function LandingPage(){
                 <CopyToClipboard
                     text= "sheet-reader@petty-pretty-pre-jul20-project.iam.gserviceaccount.com"
                     onCopy={()=>alert("Copied")}>
-                    <span>Copy Email Id</span>
+                    <span color='#ff3300'>Copy Email Id</span>
                 </CopyToClipboard>
             </Grid>
             <Grid xs={12}>

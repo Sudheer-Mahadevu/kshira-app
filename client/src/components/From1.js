@@ -1,12 +1,6 @@
 import { Stack,Typography,Paper,Checkbox,FormControlLabel,TextField,Radio,RadioGroup,FormHelperText,Button } from "@mui/material"
 import { useState } from "react";
 
-function validateUrl(url){
-    if(url.length < 36) {alert("Enter a valid spreadsheet url"); return false;}
-    else if(url.slice(0,36) != "https://docs.google.com/spreadsheets"){ alert("Enter a valid spreadsheet Url");return false;}
-    else return true;
-}
-
 function Form1(props){
     let [shared,setShared] = useState(false);
     let [url,setUrl] = useState("");
@@ -28,9 +22,10 @@ function Form1(props){
     return(
         <>
             <Stack alignItems={"center"} spacing={3}>
-                <Typography variant='h4' textAlign={"center"}>
+                <Typography variant='h4' color={"#3366ff"} textAlign={"center"}>
                     Step 1 of 2
                 </Typography>
+                <Typography variant="h5">Make sure that values entered in the sheet are in specified formant</Typography>
                 <Paper  sx={{width:400}}>
                     <Stack alignItems={"center"} spacing={2} sx={{margin:2}}>
                         <FormControlLabel required control={<Checkbox value={shared} onChange={()=>{setShared(!shared)}}/>} label="Shared the spreadsheet"/>
