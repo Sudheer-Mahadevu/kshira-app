@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/kshira-app/static/css/main.e6c13ad2.css",
+    "main.js": "/kshira-app/static/js/main.445e273f.js",
+    "index.html": "/kshira-app/index.html",
+    "main.e6c13ad2.css.map": "/kshira-app/static/css/main.e6c13ad2.css.map",
+    "main.445e273f.js.map": "/kshira-app/static/js/main.445e273f.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.445e273f.js"
+  ]
+}
