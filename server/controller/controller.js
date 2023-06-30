@@ -5,6 +5,7 @@ const path = require('path')
 
 async function getBill(req,res){
     let start = Date.now();
+    console.log(req.body)
     console.log(`\nRequest recieved at ${Date(start)}`)
     let [morningValues,eveningValues,inputSize] = await getValues(req.body.spreadsheetUrl);
 
@@ -49,7 +50,21 @@ async function getBill(req,res){
     let stop = Date.now();
     console.log(`\nRequest sent.Input Size: ${inputSize}\nTook ${stop-start}ms to process the request`)
     console.log("Double OK")
-    await res.download(__dirname+'/Bill01.pdf')
+    let filepath = path.join(__dirname,'/Bill01.pdf')
+
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    
+    await res.sendFile(filepath,{
+        headers: {
+          'Content-Type': 'application/pdf',
+        },
+      },err => {
+        if (err) {
+          console.error('Error sending file:', err);
+          res.status(500).end();
+        }})
     // fs.unlink(path.join(__dirname,'/Bill01.pdf'),(err)=>{
     //     if(err) throw err;
     //     console.log("Deleted file at "+path.join(__dirname,'/Bill01.pdf'));

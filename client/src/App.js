@@ -1,8 +1,8 @@
-import LandingPage from "./pages";
+import Index from "./pages";
 
 function App() {
   return (
-    <LandingPage/>
+    <Index/>
   );
 }
 
